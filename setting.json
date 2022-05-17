@@ -1,0 +1,9 @@
+{
+  "workbench.colorTheme": "Default High Contrast",
+  "editor.accessibilitySupport": "off",
+  "editor.tabSize": 2,
+  "editor.rulers": [
+    80
+  ],
+  "editor.formatOnSave": true
+}

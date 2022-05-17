@@ -1,0 +1,622 @@
+{
+  "real_estate": [
+    {
+      "name": "MEDITERRANEAN AVENUE",
+      "id": 1,
+      "color": "brown",
+      "price": 60,
+      "rent": 2,
+      "rent_with_color_set": 4,
+      "with_1_house": 10,
+      "with_2_house": 30,
+      "with_3_house": 90,
+      "with_4_house": 160,
+      "with_hotel": 250,
+      "mortgage": 30,
+      "house_cost": 50,
+      "hotel_cost": 50,
+      "house_sell": 25,
+      "hotel_sell": 25
+    },
+    {
+      "name": "BALTIC AVENUE",
+      "id": 3,
+      "color": "brown",
+      "price": 60,
+      "rent": 4,
+      "rent_with_color_set": 8,
+      "with_1_house": 20,
+      "with_2_house": 60,
+      "with_3_house": 180,
+      "with_4_house": 320,
+      "with_hotel": 450,
+      "mortgage": 50,
+      "house_cost": 50,
+      "hotel_cost": 50,
+      "house_sell": 25,
+      "hotel_sell": 25
+    },
+    {
+      "name": "ORIENTAL AVENUE",
+      "id": 6,
+      "color": "cyan",
+      "price": 100,
+      "rent": 6,
+      "rent_with_color_set": 12,
+      "with_1_house": 30,
+      "with_2_house": 90,
+      "with_3_house": 270,
+      "with_4_house": 400,
+      "with_hotel": 550,
+      "mortgage": 50,
+      "house_cost": 50,
+      "hotel_cost": 50,
+      "house_sell": 25,
+      "hotel_sell": 25
+    },
+    {
+      "name": "VERMONT AVENUE",
+      "id": 8,
+      "color": "cyan",
+      "price": 100,
+      "rent": 6,
+      "rent_with_color_set": 12,
+      "with_1_house": 30,
+      "with_2_house": 90,
+      "with_3_house": 270,
+      "with_4_house": 400,
+      "with_hotel": 550,
+      "mortgage": 50,
+      "house_cost": 50,
+      "hotel_cost": 50,
+      "house_sell": 25,
+      "hotel_sell": 25
+    },
+    {
+      "name": "CONNECTICUT AVENUE",
+      "id": 9,
+      "color": "cyan",
+      "price": 120,
+      "rent": 8,
+      "rent_with_color_set": 16,
+      "with_1_house": 40,
+      "with_2_house": 100,
+      "with_3_house": 300,
+      "with_4_house": 450,
+      "with_hotel": 600,
+      "mortgage": 60,
+      "house_cost": 50,
+      "hotel_cost": 50,
+      "house_sell": 25,
+      "hotel_sell": 25
+    },
+    {
+      "name": "ST.CHARLES PLACE",
+      "id": 11,
+      "color": "pink",
+      "price": 140,
+      "rent": 10,
+      "rent_with_color_set": 20,
+      "with_1_house": 50,
+      "with_2_house": 150,
+      "with_3_house": 450,
+      "with_4_house": 625,
+      "with_hotel": 750,
+      "mortgage": 70,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "STATES AVENUE",
+      "id": 13,
+      "color": "pink",
+      "price": 140,
+      "rent": 10,
+      "rent_with_color_set": 20,
+      "with_1_house": 50,
+      "with_2_house": 150,
+      "with_3_house": 450,
+      "with_4_house": 625,
+      "with_hotel": 750,
+      "mortgage": 70,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "VIRGINIA AVENUE",
+      "id": 14,
+      "color": "pink",
+      "price": 160,
+      "rent": 12,
+      "rent_with_color_set": 24,
+      "with_1_house": 60,
+      "with_2_house": 180,
+      "with_3_house": 500,
+      "with_4_house": 700,
+      "with_hotel": 900,
+      "mortgage": 80,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "ST.JAMES PLACE",
+      "id": 16,
+      "color": "ornage",
+      "price": 180,
+      "rent": 14,
+      "rent_with_color_set": 28,
+      "with_1_house": 70,
+      "with_2_house": 200,
+      "with_3_house": 550,
+      "with_4_house": 750,
+      "with_hotel": 950,
+      "mortgage": 90,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "TENNESSEE AVENUE",
+      "id": 18,
+      "color": "ornage",
+      "price": 180,
+      "rent": 14,
+      "rent_with_color_set": 28,
+      "with_1_house": 70,
+      "with_2_house": 200,
+      "with_3_house": 550,
+      "with_4_house": 750,
+      "with_hotel": 950,
+      "mortgage": 90,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "NEW_YORK AVENUE",
+      "id": 19,
+      "color": "ornage",
+      "price": 200,
+      "rent": 16,
+      "rent_with_color_set": 32,
+      "with_1_house": 80,
+      "with_2_house": 220,
+      "with_3_house": 600,
+      "with_4_house": 800,
+      "with_hotel": 1000,
+      "mortgage": 100,
+      "house_cost": 100,
+      "hotel_cost": 100,
+      "house_sell": 50,
+      "hotel_sell": 50
+    },
+    {
+      "name": "KENTUCKY AVENUE",
+      "id": 21,
+      "color": "red",
+      "price": 220,
+      "rent": 18,
+      "rent_with_color_set": 36,
+      "with_1_house": 90,
+      "with_2_house": 250,
+      "with_3_house": 700,
+      "with_4_house": 875,
+      "with_hotel": 1050,
+      "mortgage": 110,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "INDIANA AVENUE",
+      "id": 23,
+      "color": "red",
+      "price": 220,
+      "rent": 18,
+      "rent_with_color_set": 36,
+      "with_1_house": 90,
+      "with_2_house": 250,
+      "with_3_house": 700,
+      "with_4_house": 875,
+      "with_hotel": 1050,
+      "mortgage": 110,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "ILLINOIS AVENUE",
+      "id": 24,
+      "color": "red",
+      "price": 240,
+      "rent": 20,
+      "rent_with_color_set": 40,
+      "with_1_house": 100,
+      "with_2_house": 300,
+      "with_3_house": 750,
+      "with_4_house": 925,
+      "with_hotel": 1100,
+      "mortgage": 120,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "ATLANTIC AVENUE",
+      "id": 26,
+      "color": "yellow",
+      "price": 260,
+      "rent": 22,
+      "rent_with_color_set": 44,
+      "with_1_house": 110,
+      "with_2_house": 330,
+      "with_3_house": 800,
+      "with_4_house": 975,
+      "with_hotel": 1150,
+      "mortgage": 130,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "VENTNOR AVENUE",
+      "id": 27,
+      "color": "yellow",
+      "price": 260,
+      "rent": 22,
+      "rent_with_color_set": 44,
+      "with_1_house": 110,
+      "with_2_house": 330,
+      "with_3_house": 800,
+      "with_4_house": 975,
+      "with_hotel": 1150,
+      "mortgage": 130,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "MARVIN GARDENS",
+      "id": 29,
+      "color": "yellow",
+      "price": 280,
+      "rent": 24,
+      "rent_with_color_set": 48,
+      "with_1_house": 120,
+      "with_2_house": 360,
+      "with_3_house": 850,
+      "with_4_house": 1025,
+      "with_hotel": 1200,
+      "mortgage": 140,
+      "house_cost": 150,
+      "hotel_cost": 150,
+      "house_sell": 75,
+      "hotel_sell": 75
+    },
+    {
+      "name": "PACIFIC AVENUE",
+      "id": 31,
+      "color": "green",
+      "price": 300,
+      "rent": 26,
+      "rent_with_color_set": 52,
+      "with_1_house": 130,
+      "with_2_house": 390,
+      "with_3_house": 900,
+      "with_4_house": 1100,
+      "with_hotel": 1275,
+      "mortgage": 150,
+      "house_cost": 200,
+      "hotel_cost": 200,
+      "house_sell": 100,
+      "hotel_sell": 100
+    },
+    {
+      "name": "NORTHCAROLINA AVENUE",
+      "id": 32,
+      "color": "green",
+      "price": 300,
+      "rent": 26,
+      "rent_with_color_set": 52,
+      "with_1_house": 130,
+      "with_2_house": 390,
+      "with_3_house": 900,
+      "with_4_house": 1100,
+      "with_hotel": 1275,
+      "mortgage": 150,
+      "house_cost": 200,
+      "hotel_cost": 200,
+      "house_sell": 100,
+      "hotel_sell": 100
+    },
+    {
+      "name": "PENNSYLVANIA AVENUE",
+      "id": 34,
+      "color": "green",
+      "price": 320,
+      "rent": 28,
+      "rent_with_color_set": 56,
+      "with_1_house": 150,
+      "with_2_house": 450,
+      "with_3_house": 1000,
+      "with_4_house": 1200,
+      "with_hotel": 1400,
+      "mortgage": 160,
+      "house_cost": 200,
+      "hotel_cost": 200,
+      "house_sell": 100,
+      "hotel_sell": 100
+    },
+    {
+      "name": "PARK PLACE",
+      "id": 37,
+      "color": "blue",
+      "price": 350,
+      "rent": 35,
+      "rent_with_color_set": 70,
+      "with_1_house": 175,
+      "with_2_house": 500,
+      "with_3_house": 1100,
+      "with_4_house": 1300,
+      "with_hotel": 1500,
+      "mortgage": 175,
+      "house_cost": 200,
+      "hotel_cost": 200,
+      "house_sell": 100,
+      "hotel_sell": 100
+    },
+    {
+      "name": "BOARDWALK AVENUE",
+      "id": 39,
+      "color": "blue",
+      "price": 400,
+      "rent": 50,
+      "rent_with_color_set": 100,
+      "with_1_house": 200,
+      "with_2_house": 600,
+      "with_3_house": 1400,
+      "with_4_house": 1700,
+      "with_hotel": 2000,
+      "mortgage": 200,
+      "house_cost": 200,
+      "hotel_cost": 200,
+      "house_sell": 100,
+      "hotel_sell": 100
+    }
+  ],
+  "special": [
+    {
+      "name": "GO",
+      "id": 0
+    },
+    {
+      "name": "COMMUNITY CHEST",
+      "id": 2
+    },
+    {
+      "name": "INCOME TAX",
+      "id": 4
+    },
+    {
+      "name": "CHANCE",
+      "id": 7
+    },
+    {
+      "name": "JAIL",
+      "id": 10
+    },
+    {
+      "name": "COMMUNITY CHEST",
+      "id": 17
+    },
+    {
+      "name": "FREE PARKING",
+      "id": 20
+    },
+    {
+      "name": "CHANCE",
+      "id": 22
+    },
+    {
+      "name": "GO TO JAIL",
+      "id": 30
+    },
+    {
+      "name": "COMMUNITY CHEST",
+      "id": 33
+    },
+    {
+      "name": "CHANCE",
+      "id": 36
+    },
+    {
+      "name": "LUXURY TAX",
+      "id": 38
+    }
+  ],
+  "railroad": [
+    {
+      "name": "READING RAILROAD",
+      "id": 5,
+      "price": 200,
+      "rent": 25,
+      "mortgage": 100
+    },
+    {
+      "name": "PENNSYLVANIA RAILROAD",
+      "id": 15,
+      "price": 200,
+      "rent": 25,
+      "mortgage": 100
+    },
+    {
+      "name": "B.&_O. RAILROAD",
+      "id": 25,
+      "price": 200,
+      "rent": 25,
+      "mortgage": 100
+    },
+    {
+      "name": "SHORT LINE",
+      "id": 35,
+      "price": 200,
+      "rent": 25,
+      "mortgage": 100
+    }
+  ],
+  "electric_company": [
+    {
+      "name": "WATER WORKS",
+      "id": 28,
+      "price": 150,
+      "mortgage": 75
+    },
+    {
+      "name": "ELECTRIC COMPANY",
+      "id": 12,
+      "price": 150,
+      "mortgage": 75
+    }
+  ],
+  "Chance Cards": [
+    {
+      "name": "Advance to Boardwalk.",
+      "chance_id": 0
+    },
+    {
+      "name": "Advance to Go (Collect $200).",
+      "chance_id": 1
+    },
+    {
+      "name": "Advance to Illinois Avenue. If you pass Go, collect $200.",
+      "chance_id": 2
+    },
+    {
+      "name": "Advance to St. Charles Place. If you pass Go, collect $200.",
+      "chance_id": 3
+    },
+    {
+      "name": "Advance to the nearest Railroad. If unowned, you may buy it from the bank. If owned, pay the owner twice the rental to which they are otherwise entitled.",
+      "chance_id": 4
+    },
+    {
+      "name": "Advance to the nearest Railroad. If unowned, you may buy it from the bank. If owned, pay the owner twice the rental to which they are otherwise entitled.",
+      "chance_id": 5
+    },
+    {
+      "name": "Advance to the nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay the owner a total ten times amount thrown.",
+      "chance_id": 6
+    },
+    {
+      "name": "Bank pays you dividend of $50.",
+      "chance_id": 7
+    },
+    {
+      "name": "Get Out of Jail Free.",
+      "chance_id": 8
+    },
+    {
+      "name": "Go Back 3 Spaces.",
+      "chance_id": 9
+    },
+    {
+      "name": "Go to Jail. Go directly to Jail, do not pass Go, do not collect $200.",
+      "chance_id": 10
+    },
+    {
+      "name": "Make general repairs on all your property. For each house, pay $25. For each hotel pay $100.",
+      "chance_id": 11
+    },
+    {
+      "name": "Speeding fine $15.",
+      "chance_id": 12
+    },
+    {
+      "name": "Take a trip to Reading Railroad. If you pass Go, collect $200.",
+      "chance_id": 13
+    },
+    {
+      "name": "You have been elected Chairman of the Board. Pay each player $50.",
+      "chance_id": 14
+    }
+  ],
+  "Community Chest Cards": [
+    {
+      "name": "Advance to Go (Collect $200).",
+      "id": 0
+    },
+    {
+      "name": "Bank error in your favor. Collect $200.",
+      "id": 1
+    },
+    {
+      "name": "Doctor's fee. Pay $50.",
+      "id": 2
+    },
+    {
+      "name": "From sale of stock you get $50.",
+      "id": 3
+    },
+    {
+      "name": "Get Out of Jail Free.",
+      "id": 4
+    },
+    {
+      "name": "Go to Jail. Go directly to Jail, do not pass Go, do not collect $200.",
+      "id": 5
+    },
+    {
+      "name": "Holiday fund matures. Receive $100.",
+      "id": 6
+    },
+    {
+      "name": "Income tax refund. Collect $20.",
+      "id": 7
+    },
+    {
+      "name": "It is your birthday. Collect $10 from every player.",
+      "id": 8
+    },
+    {
+      "name": "Life insurance matures. Collect $100.",
+      "id": 9
+    },
+    {
+      "name": "Pay hospital fees of $100.",
+      "id": 10
+    },
+    {
+      "name": "Pay scholl fees of $50.",
+      "id": 11
+    },
+    {
+      "name": "Receive $25 consultancy fee.",
+      "id": 12
+    },
+    {
+      "name": "You are assessed for street repair. $40 per house. $115 per hotel.",
+      "id": 13
+    },
+    {
+      "name": "You have won second price in a beauty contest. Collect $10.",
+      "id": 14
+    },
+    {
+      "name": "You inherit $100.",
+      "id": 15
+    }
+  ]
+}

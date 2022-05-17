@@ -1,0 +1,2 @@
+No additional packages needed. Run the program test via calling [dune exec bin/main.exe] while in the main file directory. Then follow the game instructions as provided.
+If you want to end the game, you may choose to enter 'End Game' whenever the system prompts you to do so.
