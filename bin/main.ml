@@ -729,11 +729,38 @@ let rec action_on_special player map players =
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-    | "Go Back 3 Spaces." -> let new_player = Player.back_3_space player !map in 
-    players := replace_player !players new_player;
+    | "Go Back 3 Spaces." ->
+        let new_player = Player.back_3_space player !map in
+        players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-    | )
+    | "Go to Jail. Go directly to Jail, do not pass Go, do not collect \
+       $200." ->
+        let new_player = Player.go_to_jail player in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+        (* To be implemented with more rules*)
+    | "Make general repairs on all your property. For each house, pay \
+       $25. For each hotel pay $100." ->
+        let own = Player.get_own player in
+        let house_num = Player.get_house_num own in
+        let hotel_num = Player.get_hotel_num own in
+        let paid = (-25 * house_num) + (-50 * hotel_num) in
+        let new_player =
+          Player.get_money player paid
+        in
+        print_endline ("You have paid $" ^ string_of_int paid);
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Speeding fine $15." -> 
+      let new_player = Player.get_money player (-15) in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | 
+      )
   else print_string "";
   let player_name = Player.name_of_player player in
   print_endline
