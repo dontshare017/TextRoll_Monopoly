@@ -1,0 +1,9 @@
+The bulk of our code resides in three folders: test, bin, and src. 
+The src folder is our source folder containing major backend logics, these files 
+are the backbone to our gaming logic. Its modules model how player data and map
+data are interconnected.
+Test folder includes our test suites, which contains all of our case-by-case 
+tests for our individual functions.
+The bin folder contains our crucial main gaming logic in main.ml. This file
+has hundreds of lines of code that connect our backend logics together. Running
+this file initiates our gaming interface.
