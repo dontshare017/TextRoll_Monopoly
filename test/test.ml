@@ -2,10 +2,18 @@
    ensure correctness is different from traditional, case-by-case Ounit
    Testing. Considering the multitude of choices that a player can
    choose to make during the playing process, we as developers decided
-   to put ourselves in the shoes of players and play-tested our program
+   to put ourselves in the shoes of players and play-test our program
    incrementally as we code. Our test cases here may not be the most
-   comprehensive, since Monopoly is a game with infinite possibilities,
-   we have to manually test the boundary possibilities.*)
+   comprehensive, since Monopoly is a game with infinite possibilities.
+   In our manual testing process, however, we tested whether our main
+   game logic stores data and behaves correctly, whether major features
+   available to the players are able to be interacted with correctly,
+   and if our display of in-game information is user-friendly. In our
+   test suite, we will focus more on tetsing individual functions in our
+   backend logics, since it's the executable main file in bin folder
+   that connects the bulk of our backend logics together. We believe
+   ensuring the correctness of our individual functions makes writing
+   in-game logic easier.*)
 
 open OUnit2
 open Game
