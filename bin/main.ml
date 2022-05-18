@@ -937,17 +937,17 @@ let rec action_on_special player map players =
 let round player players map =
   print_endline
     ("\nNow it's " ^ Player.name_of_player player ^ "'s round. ");
-
   if Player.is_in_jail player = true then (
-    let dice_rolls = [] in
+    let dice_rolls : int list ref = ref [] in
     let correct_input = ref false in
     while not !correct_input do
       print_endline
         "\n\
          You are in jail. You can spend 50 dollars to get out, keep on \
-         rolling dice until you get a double, or use a jail card.";
+         rolling dice until you get a double (total of 3 times), or \
+         use a jail card.";
       print_endline
-        "\nChoose from the following: (Pay) (Roll) (Use Card)";
+        "\nChoose from the following: (Pay) (Roll) (Use Card) (End)";
       let input = read_line () in
       match input with
       | "Pay" ->
@@ -956,20 +956,50 @@ let round player players map =
               replace_player !players (Player.pay_jail_fee player);
             print_endline
               "You paid 50$ to get out. \n\
-              \ Here is your new player information: ";
-            print_endline (Player.player_to_string player)
+               Here is your new player information: ";
+            print_endline
+              (Player.player_to_string (Player.pay_jail_fee player));
+            correct_input := true
           end
           else print_endline "You do not have enough to pay jail fees."
-      | "Roll" -> ()
-      | "Use Card" ->
-          if Player.num_jail_cards player > 0 then
+      | "Roll" ->
+          Random.self_init ();
+          let dice1 = Random.int 6 + 1 in
+          let dice2 = Random.int 6 + 1 in
+          print_endline
+            ("You rolled. Your dice result is " ^ string_of_int dice1
+           ^ ", " ^ string_of_int dice2);
+          if dice1 = dice2 then (
+            print_endline "You rolled a double, you got out of jail!";
             players :=
-              replace_player !players (Player.use_jail_card player)
+              replace_player !players (Player.out_of_jail player);
+            correct_input := true)
+          else if List.length !dice_rolls < 2 then (
+            print_endline "Luck was not on your side.";
+            dice_rolls := 1 :: !dice_rolls)
+          else
+            let new_player = Player.update_jail_round player in
+            print_endline
+              "You have to remain in jail until your next round.";
+            players := replace_player !players new_player;
+            correct_input := true
+      | "Use Card" ->
+          if Player.num_jail_cards player > 0 then (
+            players :=
+              replace_player !players (Player.use_jail_card player);
+            correct_input := true)
           else
             print_endline "You do not have enough jail cards to do so."
+      | "End" ->
+          let new_player = Player.update_jail_round player in
+          if Player.is_in_jail new_player = false then
+            print_endline "You got out of jail after 3 rounds!"
+          else print_endline "You remained in jail.";
+          players := replace_player !players new_player;
+          correct_input := true
       | _ -> print_endline "Please recheck your input."
     done;
-    ref (replace_player !players (Player.update_jail_round player)))
+    players)
   else
     let correct_roll = ref false in
     while not !correct_roll do
@@ -979,8 +1009,11 @@ let round player players map =
       else print_endline "\nPlease enter exacly 'Roll' to roll."
     done;
     Random.self_init ();
+
     let dice1 = Random.int 6 + 1 in
     let dice2 = Random.int 6 + 1 in
+
+    (* let dice1 = 15 in let dice2 = 15 in *)
     print_endline
       ("\nYour first dice: " ^ string_of_int dice1
      ^ "; your second dice: " ^ string_of_int dice2);
