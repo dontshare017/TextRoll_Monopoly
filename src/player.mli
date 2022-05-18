@@ -150,3 +150,7 @@ val make_bankrupt : player -> player
 
 val is_bankrupt : player -> bool
 (** [is_bankrupt p] is whether player p is bankrupt.*)
+
+val return_property : player -> place list -> place list
+(** [return_property p map] is the map with all properties owned by
+    bankrupted player p resetted.*)

@@ -82,10 +82,21 @@ let buy_place player place =
 (* Change this later. It should tell the player he/she does not have
    enough money.*)
 
+let make_bankrupt p = { p with bankrupted = true; own = [] }
+
+let rec return_property p map =
+  match map with
+  | [] -> []
+  | h :: t ->
+      if List.mem h p.own then
+        Monopoly.reset_owner h :: return_property p t
+      else h :: return_property p t
+
 let auction_place player place price =
   let owner = Monopoly.owner_of_place place in
   if owner = "No Owner" || owner <> "" then
     failwith "You cannot auction this place."
+  else if price > player.money then make_bankrupt player
   else
     {
       player with
@@ -104,7 +115,6 @@ let mortgage_place player place =
     }
   else player
 
-let make_bankrupt p = { p with bankrupted = true; own = [] }
 let is_bankrupt p = p.bankrupted
 
 let pay_rent player rent player2 =

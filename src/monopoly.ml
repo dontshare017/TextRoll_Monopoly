@@ -588,3 +588,12 @@ let draw_chance_card index (chance_cards : chance_card list) =
 let draw_community_chest_card index community_chest_cards =
   let community_chest_card = List.nth community_chest_cards index in
   community_chest_card.name
+
+let reset_owner (p : place) : place =
+  match p with
+  | Real_Estate real_estate ->
+      Real_Estate { real_estate with owned_by = "" }
+  | Railroad railroad -> Railroad { railroad with owned_by = "" }
+  | Electric_Company electric_company ->
+      Electric_Company { electric_company with owned_by = "" }
+  | Special special -> Special special

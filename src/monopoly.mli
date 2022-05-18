@@ -138,3 +138,6 @@ val draw_community_chest_card :
   int -> community_chest_card list -> string
 (** [draw_community_chest_card index community_chest_cards] is the name
     of the community chest card of [index] in [community_chest_cards].*)
+
+val reset_owner : place -> place
+(** [reset_owner place] is the place with owner set to default.SS*)

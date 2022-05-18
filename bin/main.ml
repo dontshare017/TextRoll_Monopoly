@@ -312,21 +312,30 @@ let rec auction map players place price number original_players =
       let final_player =
         Player.auction_place (List.nth players number) place price
       in
-      ANSITerminal.print_string [ ANSITerminal.red ]
-        ("\n"
-        ^ Player.name_of_player final_player
-        ^ ", you have won the auction! The property is now sold to you \
-           for the price of " ^ string_of_int price);
-      map :=
-        Monopoly.update_map
-          (Monopoly.buy_place
-             (Player.name_of_player final_player)
-             place)
-          !map;
-      print_endline
-        ("\nYour new player information is: \n"
-        ^ Player.player_to_string final_player);
-      (map, replace_player original_players final_player)
+      if Player.is_bankrupt final_player = true then (
+        print_endline
+          "You cannot afford to pay the auction price. You have to \
+           declare bankrupcy.";
+        let players = remove_player players final_player in
+        map := Player.return_property final_player !map;
+        (map, players))
+      else begin
+        ANSITerminal.print_string [ ANSITerminal.red ]
+          ("\n"
+          ^ Player.name_of_player final_player
+          ^ ", you have won the auction! The property is now sold to \
+             you for the price of " ^ string_of_int price);
+        map :=
+          Monopoly.update_map
+            (Monopoly.buy_place
+               (Player.name_of_player final_player)
+               place)
+            !map;
+        print_endline
+          ("\nYour new player information is: \n"
+          ^ Player.player_to_string final_player);
+        (map, replace_player original_players final_player)
+      end
   | _ -> (
       print_endline
         ("\nProperty information in auction:\n"
@@ -551,15 +560,27 @@ let pay_rent player map players dice =
       match player_pair with
       | h, t -> h
     in
-    players := replace_player (replace_player !players owner) payer;
-    ANSITerminal.print_string [ ANSITerminal.red ]
-      ("\nYou paid the rent of "
-      ^ string_of_int (Monopoly.rent_of_place location !map dice));
-    print_endline
-      ("\nYour new player information is "
-      ^ Player.player_to_string payer);
+    if Player.is_bankrupt payer = true then (
+      print_endline
+        "\n\
+         You don't have enough money to pay this rent. You became \
+         bankrupted.";
+      players := remove_player !players payer)
+    else (
+      players := replace_player (replace_player !players owner) payer;
+      ANSITerminal.print_string [ ANSITerminal.red ]
+        ("\nYou paid the rent of "
+        ^ string_of_int (Monopoly.rent_of_place location !map dice));
+      print_endline
+        ("\nYour new player information is "
+        ^ Player.player_to_string payer));
     action_on_nonspecial payer map players)
   else action_on_nonspecial player map players
+
+let declare_bankrupt p map players =
+  print_endline (Player.name_of_player p ^ ", you are now bankrupt.");
+  map := Player.return_property p !map;
+  players := remove_player !players p
 
 let pay_double_rent player map players dice =
   let location = Player.location_of_player player in
@@ -578,13 +599,16 @@ let pay_double_rent player map players dice =
       match player_pair with
       | h, t -> h
     in
-    players := replace_player (replace_player !players owner) payer;
-    ANSITerminal.print_string [ ANSITerminal.red ]
-      ("\nYou paid the rent of "
-      ^ string_of_int (Monopoly.rent_of_place location !map dice));
-    print_endline
-      ("\nYour new player information is "
-      ^ Player.player_to_string payer);
+    if Player.is_bankrupt payer = true then
+      declare_bankrupt payer map players
+    else (
+      players := replace_player (replace_player !players owner) payer;
+      ANSITerminal.print_string [ ANSITerminal.red ]
+        ("\nYou paid the rent of "
+        ^ string_of_int (Monopoly.rent_of_place location !map dice));
+      print_endline
+        ("\nYour new player information is "
+        ^ Player.player_to_string payer));
     action_on_nonspecial payer map players)
   else action_on_nonspecial player map players
 
@@ -597,14 +621,16 @@ let rec each_player_get_50 players player =
         let new_player = Player.get_money player 50 in
         players := replace_player !players new_player
 
-let rec each_player_pay_10 players player =
+let rec each_player_pay_10 players player map =
   match !players with
   | [] -> ()
   | h :: t ->
-      if h = player then each_player_pay_10 (ref t) player
+      if h = player then each_player_pay_10 (ref t) player map
       else
         let new_player = Player.get_money player (-10) in
-        players := replace_player !players new_player
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else players := replace_player !players new_player
 
 let rec action_on_special player map players =
   let player_name = Player.name_of_player player in
@@ -780,7 +806,6 @@ let pattern_match_special player map players =
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-        (* To be implemented with more rules about jail *)
     | "Make general repairs on all your property. For each house, pay \
        $25. For each hotel pay $100." ->
         let own = Player.get_own player in
@@ -788,16 +813,22 @@ let pattern_match_special player map players =
         let hotel_num = Player.get_hotel_num own in
         let paid = (-25 * house_num) + (-50 * hotel_num) in
         let new_player = Player.get_money player paid in
-        ANSITerminal.print_string [ ANSITerminal.red ]
-          ("\nYou have paid $" ^ string_of_int paid ^ "\n");
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          ANSITerminal.print_string [ ANSITerminal.red ]
+            ("\nYou have paid $" ^ string_of_int paid ^ "\n");
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "Speeding fine $15." ->
         let new_player = Player.get_money player (-15) in
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "Take a trip to Reading Railroad. If you pass Go, collect $200."
       ->
         let step = ref (5 - current_id) in
@@ -812,10 +843,13 @@ let pattern_match_special player map players =
         let new_player =
           Player.get_money player ((player_num - 1) * -50)
         in
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player);
-        each_player_get_50 players new_player
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player);
+          each_player_get_50 players new_player)
     | _ -> failwith "no such chance card")
   else if name_of_place = "COMMUNITY CHEST" then (
     print_endline "You drew a community chest card: ";
@@ -840,9 +874,12 @@ let pattern_match_special player map players =
         print_endline (Player.player_to_string new_player)
     | "Doctor's fee. Pay $50." ->
         let new_player = Player.get_money player (-50) in
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "From sale of stock you get $50." ->
         let new_player = Player.get_money player 50 in
         players := replace_player !players new_player;
@@ -878,7 +915,7 @@ let pattern_match_special player map players =
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player);
-        each_player_pay_10 players new_player
+        each_player_pay_10 players new_player map
     | "Life insurance matures. Collect $100." ->
         let new_player = Player.get_money player 100 in
         players := replace_player !players new_player;
@@ -886,14 +923,20 @@ let pattern_match_special player map players =
         print_endline (Player.player_to_string new_player)
     | "Pay hospital fees of $100." ->
         let new_player = Player.get_money player (-100) in
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "Pay school fees of $50." ->
         let new_player = Player.get_money player (-50) in
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "Receive $25 consultancy fee." ->
         let new_player = Player.get_money player 25 in
         players := replace_player !players new_player;
@@ -906,11 +949,14 @@ let pattern_match_special player map players =
         let hotel_num = Player.get_hotel_num own in
         let paid = (-40 * house_num) + (-115 * hotel_num) in
         let new_player = Player.get_money player paid in
-        ANSITerminal.print_string [ ANSITerminal.red ]
-          ("\nYou have paid $" ^ string_of_int paid);
-        players := replace_player !players new_player;
-        print_endline "\nYour new player information is:";
-        print_endline (Player.player_to_string new_player)
+        if Player.money_of_player new_player < 0 then
+          declare_bankrupt new_player map players
+        else (
+          ANSITerminal.print_string [ ANSITerminal.red ]
+            ("\nYou have paid $" ^ string_of_int paid);
+          players := replace_player !players new_player;
+          print_endline "\nYour new player information is:";
+          print_endline (Player.player_to_string new_player))
     | "You have won second price in a beauty contest. Collect $10." ->
         let new_player = Player.get_money player 10 in
         players := replace_player !players new_player;
@@ -922,18 +968,24 @@ let pattern_match_special player map players =
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
     | _ -> failwith "no such community chest card")
-  else if name_of_place = "INCOME TAX" then (
+  else if name_of_place = "INCOME TAX" then
     let new_player = Player.get_money player (-200) in
-    players := replace_player !players new_player;
-    print_endline "You paid $200 for Income Tax. \n";
-    print_endline "\nYour new player information is:";
-    print_endline (Player.player_to_string new_player))
-  else if name_of_place = "LUXURY TAX" then (
+    if Player.money_of_player new_player < 0 then
+      declare_bankrupt new_player map players
+    else (
+      players := replace_player !players new_player;
+      print_endline "You paid $200 for Income Tax. \n";
+      print_endline "\nYour new player information is:";
+      print_endline (Player.player_to_string new_player))
+  else if name_of_place = "LUXURY TAX" then
     let new_player = Player.get_money player (-100) in
-    players := replace_player !players new_player;
-    print_endline "You paid $100 for Luxury Tax. \n";
-    print_endline "\nYour new player information is:";
-    print_endline (Player.player_to_string new_player))
+    if Player.money_of_player new_player < 0 then
+      declare_bankrupt new_player map players
+    else (
+      players := replace_player !players new_player;
+      print_endline "You paid $100 for Luxury Tax. \n";
+      print_endline "\nYour new player information is:";
+      print_endline (Player.player_to_string new_player))
   else if name_of_place = "GO TO JAIL" then (
     let new_player = Player.go_to_jail player !map in
     players := replace_player !players new_player;
@@ -1018,8 +1070,8 @@ let round player players map =
     done;
     Random.self_init ();
 
-    let dice1 = 0 (*Random.int 6 + 1*) in
-    let dice2 = 1 (*Random.int 6 + 1*) in
+    let dice1 = Random.int 6 + 1 in
+    let dice2 = Random.int 6 + 1 in
 
     (* let dice1 = 15 in let dice2 = 15 in *)
     print_endline
@@ -1042,7 +1094,9 @@ let rec cycle_aux players ind map =
 let rec progress players map acc =
   print_endline "\nEnter 'End Game' to end game: ";
   let end_game = read_line () in
-  if end_game = "End Game" then
+  if List.length !players = 1 then
+    print_endline "Congratulations, you have won the Monopoly!"
+  else if end_game = "End Game" then
     print_endline "\nSee you again next time!"
   else if acc = List.length !players - 1 then
     progress (cycle_aux players 0 map) map 0
@@ -1056,8 +1110,17 @@ let main () =
   in
   ANSITerminal.print_string [ ANSITerminal.red ]
     "How many players do you need?\n";
-  let player_num = int_of_string (read_line ()) in
-  let players = ref (make_players [] player_num !map) in
+  let player_num = ref (int_of_string (read_line ())) in
+  let correct_num = ref false in
+  while not !correct_num do
+    if !player_num = 1 then (
+      print_endline
+        "You cannot play Monopoly on your own! Enter your player \
+         number again:";
+      player_num := int_of_string (read_line ()))
+    else correct_num := true
+  done;
+  let players = ref (make_players [] !player_num !map) in
   progress players map (-1)
 
 let () = main ()
