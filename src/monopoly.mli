@@ -13,7 +13,7 @@ val start_place : place list -> place
 (** [start_place map] is the [place] of the starting place in [map].*)
 
 val place_to_string : place -> string
-(** [place_to_string] is the string representation of [place].*)
+(** [place_to_string place] is the string representation of [place].*)
 
 val generate_map : Yojson.Basic.t -> place list
 (** [generate_map] returns the list of places that is a representation
@@ -60,10 +60,6 @@ val owner_of_place : place -> string
 (** [owner_of_place map id] is the name of the owner of the place on
     [map] that has [id]. If the place is not owned by anyone, it is an
     empty string. If [place] cannot be owned by anyone, it is "No Owner"*)
-
-val house_cost_of_place : place -> int
-(** [house_cost_of_place] is the money needed to build a house on
-    [place].*)
 
 val num_electric_own : string -> place list -> int
 (** [num_electric_own owner map] is the number of electric companys the
@@ -130,14 +126,15 @@ val sell_hotel : place -> place
 (** [sell_hotel place] is the [place] after selling 1 hotel. Requires:
     [place] is a real estate.*)
 
-val buy_place : string -> place -> place
-(** [buy_place name place] is the [place] with updated owner information
-    in which owner name is passed in as a string*)
-
 val update_map : place -> place list -> place list
 (** [update_map place map] is the map where [place] is substituted in
     [map] with the same id.*)
 
 val draw_chance_card : int -> chance_card list -> string
 (** [draw_chance_card index chance_cards] is the name of the chance card
-    of [index] in [chance_cards]*)
+    of [index] in [chance_cards].*)
+
+val draw_community_chest_card :
+  int -> community_chest_card list -> string
+(** [draw_community_chest_card index community_chest_cards] is the name
+    of the community chest card of [index] in [community_chest_cards].*)

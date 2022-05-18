@@ -303,39 +303,39 @@ type map = place list
 let place_to_string place =
   match place with
   | Special (Go (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Chance (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Community_Chest (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Income_Tax (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Luxury_Tax (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (In_Jail (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Free_Parking (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Special (Go_To_Jail (name, id)) ->
-      "name: " ^ name ^ ", index on map: " ^ string_of_int id
+      "Name: " ^ name ^ ", Index on map: " ^ string_of_int id
   | Real_Estate r ->
-      "name: " ^ r.name ^ ", index on map: " ^ string_of_int r.id
-      ^ ", color: " ^ r.color ^ ", price: " ^ string_of_int r.price
-      ^ ", house: " ^ string_of_int r.house ^ ", hotel: "
-      ^ string_of_int r.hotel ^ ", owned by: " ^ r.owned_by
+      "Name: " ^ r.name ^ ", Index on map: " ^ string_of_int r.id
+      ^ ", Color: " ^ r.color ^ ", Price: " ^ string_of_int r.price
+      ^ ", House: " ^ string_of_int r.house ^ ", Hotel: "
+      ^ string_of_int r.hotel ^ ", Owned by: " ^ r.owned_by
       (* [title_deed] is not displayed here. Will make a function later
          to display such information when player clicks on it.*)
   | Railroad rr ->
-      "name: " ^ rr.name ^ ", index on map: " ^ string_of_int rr.id
-      ^ ", price: " ^ string_of_int rr.price ^ ", rent: "
-      ^ string_of_int rr.rent ^ ", mortgage: "
+      "Name: " ^ rr.name ^ ", Index on map: " ^ string_of_int rr.id
+      ^ ", Price: " ^ string_of_int rr.price ^ ", Rent: "
+      ^ string_of_int rr.rent ^ ", Mortgage: "
       ^ string_of_int rr.mortgage
-      ^ ", owned by : " ^ rr.owned_by
+      ^ ", Owned by : " ^ rr.owned_by
   | Electric_Company ec ->
-      "name: " ^ ec.name ^ ", index on map: " ^ string_of_int ec.id
-      ^ ", price: " ^ string_of_int ec.price ^ ", mortgage: "
+      "Name: " ^ ec.name ^ ", Index on map: " ^ string_of_int ec.id
+      ^ ", Price: " ^ string_of_int ec.price ^ ", Mortgage: "
       ^ string_of_int ec.mortgage
-      ^ ", owned by : " ^ ec.owned_by
+      ^ ", Owned by : " ^ ec.owned_by
 
 let color_of_place place =
   match place with
@@ -581,6 +581,10 @@ let sell_hotel place =
   let real_estate = real_estate_of_place place in
   Real_Estate { real_estate with hotel = real_estate.hotel - 1 }
 
-let draw_chance_card index chance_cards =
+let draw_chance_card index (chance_cards : chance_card list) =
   let chance_card = List.nth chance_cards index in
   chance_card.name
+
+let draw_community_chest_card index community_chest_cards =
+  let community_chest_card = List.nth community_chest_cards index in
+  community_chest_card.name
