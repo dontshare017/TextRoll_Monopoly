@@ -514,7 +514,7 @@ let rec action_on_nonspecial player map players =
       print_endline "\nYou chose to trade with another player.";
       print_endline
         "\nEnter the player's name with whom you want to trade with:";
-      let target_player = read_line () in
+      (* let target_player = read_line () in *)
       print_endline "\nYour new player information:";
       print_endline (Player.player_to_string player);
       action_on_nonspecial player map players
@@ -580,6 +580,24 @@ let pay_double_rent player map players dice =
       ^ Player.player_to_string payer);
     action_on_nonspecial payer map players)
   else action_on_nonspecial player map players
+
+let rec each_player_get_50 players player =
+  match !players with
+  | [] -> ()
+  | h :: t ->
+      if h = player then each_player_get_50 (ref t) player
+      else
+        let new_player = Player.get_money player 50 in
+        players := replace_player !players new_player
+
+let rec each_player_pay_10 players player =
+  match !players with
+  | [] -> ()
+  | h :: t ->
+      if h = player then each_player_pay_10 (ref t) player
+      else
+        let new_player = Player.get_money player (-10) in
+        players := replace_player !players new_player
 
 let rec action_on_special player map players =
   let location = Player.location_of_player player in
@@ -736,71 +754,245 @@ let rec action_on_special player map players =
         print_endline (Player.player_to_string new_player)
     | "Go to Jail. Go directly to Jail, do not pass Go, do not collect \
        $200." ->
-        let new_player = Player.go_to_jail player in
+        let new_player = Player.go_to_jail player !map in
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-        (* To be implemented with more rules*)
+        (* To be implemented with more rules about jail *)
     | "Make general repairs on all your property. For each house, pay \
        $25. For each hotel pay $100." ->
         let own = Player.get_own player in
         let house_num = Player.get_house_num own in
         let hotel_num = Player.get_hotel_num own in
         let paid = (-25 * house_num) + (-50 * hotel_num) in
-        let new_player =
-          Player.get_money player paid
-        in
+        let new_player = Player.get_money player paid in
         print_endline ("You have paid $" ^ string_of_int paid);
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-    | "Speeding fine $15." -> 
-      let new_player = Player.get_money player (-15) in
+    | "Speeding fine $15." ->
+        let new_player = Player.get_money player (-15) in
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
-    | 
-      )
-  else print_string "";
+    | "Take a trip to Reading Railroad. If you pass Go, collect $200."
+      ->
+        let step = ref (5 - current_id) in
+        if !step < 0 then step := !step + 40 else step := !step;
+        let moved_player = Player.move player !step !map in
+        players := replace_player !players moved_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string moved_player)
+    | "You have been elected Chairman of the Board. Pay each player \
+       $50." ->
+        let player_num = List.length !players in
+        let new_player =
+          Player.get_money player ((player_num - 1) * -50)
+        in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player);
+        each_player_get_50 players new_player
+    | _ -> failwith "no such chance card")
+  else if name_of_place = "COMMUNITY CHEST" then (
+    print_endline "You drew a community chest card: ";
+    Random.self_init ();
+    let random = Random.int 16 in
+    let card =
+      Monopoly.draw_community_chest_card random community_chest_cards
+    in
+    print_endline card;
+    match card with
+    | "Advance to Go (Collect $200)." ->
+        let step = ref (0 - current_id) in
+        if !step < 0 then step := !step + 40 else step := !step;
+        let moved_player = Player.move player !step !map in
+        players := replace_player !players moved_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string moved_player)
+    | "Bank error in your favor. Collect $200." ->
+        let new_player = Player.get_money player 200 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Doctor's fee. Pay $50." ->
+        let new_player = Player.get_money player (-50) in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "From sale of stock you get $50." ->
+        let new_player = Player.get_money player 50 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Get Out of Jail Free." ->
+        let new_player = Player.add_jail_card player in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Go to Jail. Go directly to Jail, do not pass Go, do not collect \
+       $200." ->
+        let new_player = Player.go_to_jail player !map in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+        (* To be implemented with more rules about jail *)
+    | "Holiday fund matures. Receive $100." ->
+        let new_player = Player.get_money player 100 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Income tax refund. Collect $20." ->
+        let new_player = Player.get_money player 20 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "It is your birthday. Collect $10 from every player." ->
+        let player_num = List.length !players in
+        let new_player =
+          Player.get_money player ((player_num - 1) * 10)
+        in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player);
+        each_player_pay_10 players new_player
+    | "Life insurance matures. Collect $100." ->
+        let new_player = Player.get_money player 100 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Pay hospital fees of $100." ->
+        let new_player = Player.get_money player (-100) in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Pay school fees of $50." ->
+        let new_player = Player.get_money player (-50) in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "Receive $25 consultancy fee." ->
+        let new_player = Player.get_money player 25 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "You are assessed for street repair. $40 per house. $115 per \
+       hotel." ->
+        let own = Player.get_own player in
+        let house_num = Player.get_house_num own in
+        let hotel_num = Player.get_hotel_num own in
+        let paid = (-40 * house_num) + (-115 * hotel_num) in
+        let new_player = Player.get_money player paid in
+        print_endline ("You have paid $" ^ string_of_int paid);
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "You have won second price in a beauty contest. Collect $10." ->
+        let new_player = Player.get_money player 10 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | "You inherit $100." ->
+        let new_player = Player.get_money player 100 in
+        players := replace_player !players new_player;
+        print_endline "\nYour new player information is:";
+        print_endline (Player.player_to_string new_player)
+    | _ -> failwith "no such community chest card")
+  else if name_of_place = "INCOME TAX" then (
+    let new_player = Player.get_money player (-200) in
+    players := replace_player !players new_player;
+    print_endline "You paid $200 for Income Tax. \n";
+    print_endline "\nYour new player information is:";
+    print_endline (Player.player_to_string new_player))
+  else if name_of_place = "LUXURY TAX" then (
+    let new_player = Player.get_money player (-100) in
+    players := replace_player !players new_player;
+    print_endline "You paid $100 for Luxury Tax. \n";
+    print_endline "\nYour new player information is:";
+    print_endline (Player.player_to_string new_player))
+  else if name_of_place = "GO TO JAIL" then (
+    let new_player = Player.go_to_jail player !map in
+    players := replace_player !players new_player;
+    print_endline "\nYour new player information is:";
+    print_endline (Player.player_to_string new_player)
+    (* To be implemented with more rules about jail *))
+  else failwith "no such special";
   let player_name = Player.name_of_player player in
   print_endline
     ("\n" ^ player_name
-   ^ ", please choose from the following: (Trade) (End)");
+   ^ ", please choose from the following: (Trade) (See Map) (End)");
   let action = read_line () in
   match action with
   | "Trade" ->
       print_endline "You chose to trade with another player.";
-      action_on_special player
+      action_on_special player map players
+  | "See Map" ->
+      print_map !map;
+      action_on_special player map players
   | "End" -> ()
   | _ ->
       print_endline "You did not enter a valid input. Please try again.";
-      action_on_special player
+      action_on_special player map players
 
 let round player players map =
   print_endline
     ("\nNow it's " ^ Player.name_of_player player ^ "'s round. ");
-  let correct_roll = ref false in
-  while not !correct_roll do
-    print_string "\nEnter 'Roll' to roll the dice:\n";
-    let player_input = read_line () in
-    if player_input = "Roll" then correct_roll := true
-    else print_endline "\nPlease enter exacly 'Roll' to roll."
-  done;
-  Random.self_init ();
-  let dice1 = Random.int 6 + 1 in
-  let dice2 = Random.int 6 + 1 in
-  print_endline
-    ("\nYour first dice: " ^ string_of_int dice1
-   ^ "; your second dice: " ^ string_of_int dice2);
-  let moved_player = Player.move player (dice1 + dice2) !map in
-  players := replace_player !players moved_player;
-  print_endline "\nYour new player information is:";
-  print_endline (Player.player_to_string moved_player);
-  let location = Player.location_of_player moved_player in
-  if Monopoly.is_special location then (
-    action_on_special moved_player map players;
-    players)
-  else pay_rent moved_player map players (dice1 + dice2)
+
+  if Player.is_in_jail player = true then (
+    let dice_rolls = [] in
+    let correct_input = ref false in
+    while not !correct_input do
+      print_endline
+        "\n\
+         You are in jail. You can spend 50 dollars to get out, keep on \
+         rolling dice until you get a double, or use a jail card.";
+      print_endline
+        "\nChoose from the following: (Pay) (Roll) (Use Card)";
+      let input = read_line () in
+      match input with
+      | "Pay" ->
+          if Player.money_of_player player >= 50 then begin
+            players :=
+              replace_player !players (Player.pay_jail_fee player);
+            print_endline
+              "You paid 50$ to get out. \n\
+              \ Here is your new player information: ";
+            print_endline (Player.player_to_string player)
+          end
+          else print_endline "You do not have enough to pay jail fees."
+      | "Roll" -> ()
+      | "Use Card" ->
+          if Player.num_jail_cards player > 0 then
+            players :=
+              replace_player !players (Player.use_jail_card player)
+          else
+            print_endline "You do not have enough jail cards to do so."
+      | _ -> print_endline "Please recheck your input."
+    done;
+    ref (replace_player !players (Player.update_jail_round player)))
+  else
+    let correct_roll = ref false in
+    while not !correct_roll do
+      print_string "\nEnter 'Roll' to roll the dice:\n";
+      let player_input = read_line () in
+      if player_input = "Roll" then correct_roll := true
+      else print_endline "\nPlease enter exacly 'Roll' to roll."
+    done;
+    Random.self_init ();
+    let dice1 = Random.int 6 + 1 in
+    let dice2 = Random.int 6 + 1 in
+    print_endline
+      ("\nYour first dice: " ^ string_of_int dice1
+     ^ "; your second dice: " ^ string_of_int dice2);
+    let moved_player = Player.move player (dice1 + dice2) !map in
+    players := replace_player !players moved_player;
+    print_endline "\nYour new player information is:";
+    print_endline (Player.player_to_string moved_player);
+    let location = Player.location_of_player moved_player in
+    if Monopoly.is_special location then (
+      action_on_special moved_player map players;
+      players)
+    else pay_rent moved_player map players (dice1 + dice2)
 
 let rec cycle_aux players ind map =
   round (List.nth !players ind) players map
