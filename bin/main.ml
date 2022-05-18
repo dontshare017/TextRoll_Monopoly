@@ -273,15 +273,17 @@ let print_map map =
 let rec make_players players num map =
   match num with
   | 0 ->
-      print_endline "Welcome to Monopoly!";
+      ANSITerminal.print_string [ ANSITerminal.red ]
+        "\nWelcome to Monopoly!\n";
       players
   | _ ->
       ANSITerminal.print_string [ ANSITerminal.red ]
-        "Enter your player name:";
+        "Enter your player name:\n";
       let player_name = read_line () in
       let new_player = Player.make_new_player player_name map in
       print_endline
-        "Your new player is initiated with the following information: ";
+        "\n\
+         Your new player is initiated with the following information: ";
       print_endline (Player.player_to_string new_player);
       make_players (new_player :: players) (num - 1) map
 
@@ -302,15 +304,15 @@ let rec remove_player lst player =
       else h :: remove_player t player
 
 let rec auction map players place price number original_players =
+  print_endline "\nPlayer information in auction: ";
   List.map Player.player_to_string players |> List.iter print_endline;
-  print_int number;
   match players with
   | [] -> (map, original_players)
   | [ _ ] ->
       let final_player =
         Player.auction_place (List.nth players number) place price
       in
-      print_endline
+      ANSITerminal.print_string [ ANSITerminal.red ]
         ("\n"
         ^ Player.name_of_player final_player
         ^ ", you have won the auction! The property is now sold to you \
@@ -322,7 +324,7 @@ let rec auction map players place price number original_players =
              place)
           !map;
       print_endline
-        ("Your new player information is: \n"
+        ("\nYour new player information is: \n"
         ^ Player.player_to_string final_player);
       (map, replace_player original_players final_player)
   | _ -> (
@@ -332,8 +334,9 @@ let rec auction map players place price number original_players =
       print_endline
         ("\n"
         ^ Player.name_of_player (List.nth players number)
-        ^ ", please enter your action in this auction: (Add 1) (Add \
-           10) (Add 100) (Quit)");
+        ^ ", please enter your action in this auction: ");
+      ANSITerminal.print_string [ ANSITerminal.green ]
+        "\n(Add 1) (Add 10) (Add 100) (Quit)\n";
       let action = read_line () in
       match action with
       | "Add 1" ->
@@ -396,12 +399,23 @@ let rec action_on_nonspecial player map players =
   let location = Player.location_of_player player in
   let player_name = Player.name_of_player player in
   print_endline
-    ("\n" ^ player_name
-   ^ ", please choose from the following: (Buy) (Build House) (Sell \
-      House) (Build Hotel) (Sell Hotel) (Auction) (Trade) (See Map) \
-      (End)");
+    ("\n" ^ player_name ^ ", please choose from the following: \n ");
+  ANSITerminal.print_string [ ANSITerminal.green ]
+    "(Buy) (Build House) (Sell House) (Build Hotel)  \n\
+     (Sell Hotel) (Auction) (See Map) (Owned) (End) \n";
   let action = read_line () in
   match action with
+  | "Owned" ->
+      print_endline "\n[Owned Properties]: ";
+      let rec print_own lst =
+        match lst with
+        | [] -> ()
+        | h :: t ->
+            print_endline ("\n" ^ Monopoly.place_to_string h);
+            print_own t
+      in
+      print_own (Player.get_own player);
+      action_on_nonspecial player map players
   | "Buy" -> (
       try
         let final_player = Player.buy_place player location in
@@ -418,7 +432,7 @@ let rec action_on_nonspecial player map players =
         action_on_nonspecial final_player map players
       with _ ->
         print_endline
-          "You cannot buy this place for it is already owned.";
+          "\nYou cannot buy this place for it is already owned.";
         action_on_nonspecial player map players)
   | "Auction" ->
       if Monopoly.owner_of_place location = "" then (
@@ -443,7 +457,8 @@ let rec action_on_nonspecial player map players =
         action_on_nonspecial final_player new_map updated_players)
       else (
         print_endline
-          "You cannot auction this land for this land already has an \
+          "\n\
+           You cannot auction this land for this land already has an \
            owner.";
         action_on_nonspecial player map players)
   | "Build House" ->
@@ -510,14 +525,6 @@ let rec action_on_nonspecial player map players =
       else (
         print_endline "\nYou cannot sell a hotel.";
         action_on_nonspecial player map players)
-  | "Trade" ->
-      print_endline "\nYou chose to trade with another player.";
-      print_endline
-        "\nEnter the player's name with whom you want to trade with:";
-      (* let target_player = read_line () in *)
-      print_endline "\nYour new player information:";
-      print_endline (Player.player_to_string player);
-      action_on_nonspecial player map players
   | "See Map" ->
       print_map !map;
       action_on_nonspecial player map players
@@ -545,7 +552,7 @@ let pay_rent player map players dice =
       | h, t -> h
     in
     players := replace_player (replace_player !players owner) payer;
-    print_endline
+    ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nYou paid the rent of "
       ^ string_of_int (Monopoly.rent_of_place location !map dice));
     print_endline
@@ -572,7 +579,7 @@ let pay_double_rent player map players dice =
       | h, t -> h
     in
     players := replace_player (replace_player !players owner) payer;
-    print_endline
+    ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nYou paid the rent of "
       ^ string_of_int (Monopoly.rent_of_place location !map dice));
     print_endline
@@ -600,16 +607,31 @@ let rec each_player_pay_10 players player =
         players := replace_player !players new_player
 
 let rec action_on_special player map players =
+  let player_name = Player.name_of_player player in
+  print_endline
+    ("\n" ^ player_name
+   ^ ", please choose from the following: (See Map) (End)");
+  let action = read_line () in
+  match action with
+  | "See Map" ->
+      print_map !map;
+      action_on_special player map players
+  | "End" -> ()
+  | _ ->
+      print_endline "You did not enter a valid input. Please try again.";
+      action_on_special player map players
+
+let pattern_match_special player map players =
   let location = Player.location_of_player player in
   let name_of_place = Monopoly.name_of_place location in
   let current_id = Monopoly.id_of_place location in
-  print_endline ("You are at: " ^ name_of_place);
+  print_endline ("\nYou are at: " ^ name_of_place);
   if
     name_of_place = "GO" || name_of_place = "JAIL"
     || name_of_place = "FREE PARKING"
   then
     print_endline
-      ("You arrived at " ^ name_of_place ^ ", nothing happens.")
+      ("\nYou arrived at " ^ name_of_place ^ ", nothing happens.")
   else if name_of_place = "CHANCE" then (
     print_endline "You drew a chance card: ";
     Random.self_init ();
@@ -766,7 +788,8 @@ let rec action_on_special player map players =
         let hotel_num = Player.get_hotel_num own in
         let paid = (-25 * house_num) + (-50 * hotel_num) in
         let new_player = Player.get_money player paid in
-        print_endline ("You have paid $" ^ string_of_int paid);
+        ANSITerminal.print_string [ ANSITerminal.red ]
+          ("\nYou have paid $" ^ string_of_int paid ^ "\n");
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
@@ -883,7 +906,8 @@ let rec action_on_special player map players =
         let hotel_num = Player.get_hotel_num own in
         let paid = (-40 * house_num) + (-115 * hotel_num) in
         let new_player = Player.get_money player paid in
-        print_endline ("You have paid $" ^ string_of_int paid);
+        ANSITerminal.print_string [ ANSITerminal.red ]
+          ("\nYou have paid $" ^ string_of_int paid);
         players := replace_player !players new_player;
         print_endline "\nYour new player information is:";
         print_endline (Player.player_to_string new_player)
@@ -916,23 +940,7 @@ let rec action_on_special player map players =
     print_endline "\nYour new player information is:";
     print_endline (Player.player_to_string new_player)
     (* To be implemented with more rules about jail *))
-  else failwith "no such special";
-  let player_name = Player.name_of_player player in
-  print_endline
-    ("\n" ^ player_name
-   ^ ", please choose from the following: (Trade) (See Map) (End)");
-  let action = read_line () in
-  match action with
-  | "Trade" ->
-      print_endline "You chose to trade with another player.";
-      action_on_special player map players
-  | "See Map" ->
-      print_map !map;
-      action_on_special player map players
-  | "End" -> ()
-  | _ ->
-      print_endline "You did not enter a valid input. Please try again.";
-      action_on_special player map players
+  else failwith "no such special"
 
 let round player players map =
   print_endline
@@ -1010,8 +1018,8 @@ let round player players map =
     done;
     Random.self_init ();
 
-    let dice1 = Random.int 6 + 1 in
-    let dice2 = Random.int 6 + 1 in
+    let dice1 = 0 (*Random.int 6 + 1*) in
+    let dice2 = 1 (*Random.int 6 + 1*) in
 
     (* let dice1 = 15 in let dice2 = 15 in *)
     print_endline
@@ -1023,6 +1031,7 @@ let round player players map =
     print_endline (Player.player_to_string moved_player);
     let location = Player.location_of_player moved_player in
     if Monopoly.is_special location then (
+      pattern_match_special moved_player map players;
       action_on_special moved_player map players;
       players)
     else pay_rent moved_player map players (dice1 + dice2)
@@ -1045,7 +1054,8 @@ let main () =
       (Monopoly.generate_map
          (Yojson.Basic.from_file "data/map_info.json"))
   in
-  print_endline "How many players do you need?";
+  ANSITerminal.print_string [ ANSITerminal.red ]
+    "How many players do you need?\n";
   let player_num = int_of_string (read_line ()) in
   let players = ref (make_players [] player_num !map) in
   progress players map (-1)
