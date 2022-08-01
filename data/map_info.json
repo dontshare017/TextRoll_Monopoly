@@ -147,7 +147,7 @@
     {
       "name": "ST.JAMES PLACE",
       "id": 16,
-      "color": "ornage",
+      "color": "orange",
       "price": 180,
       "rent": 14,
       "rent_with_color_set": 28,
@@ -165,7 +165,7 @@
     {
       "name": "TENNESSEE AVENUE",
       "id": 18,
-      "color": "ornage",
+      "color": "orange",
       "price": 180,
       "rent": 14,
       "rent_with_color_set": 28,
@@ -183,7 +183,7 @@
     {
       "name": "NEW_YORK AVENUE",
       "id": 19,
-      "color": "ornage",
+      "color": "orange",
       "price": 200,
       "rent": 16,
       "rent_with_color_set": 32,
@@ -599,7 +599,7 @@
       "id": 10
     },
     {
-      "name": "Pay scholl fees of $50.",
+      "name": "Pay school fees of $50.",
       "id": 11
     },
     {

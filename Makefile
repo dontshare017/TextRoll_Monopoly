@@ -7,7 +7,7 @@ utop:
 	OCAMLRUNPARAM=b dune utop src
 
 test:
-	OCAMLRUNPARAM=b dune exec test/main.exe
+	OCAMLRUNPARAM=b dune exec test/test.exe
 
 play:
 	OCAMLRUNPARAM=b dune exec bin/main.exe
@@ -19,7 +19,7 @@ finalcheck:
 	@bash check.sh final
 
 bisect: bisect-clean
-	-dune exec --instrument-with bisect_ppx --force test/main.exe
+	-dune exec --instrument-with bisect_ppx --force test/test.exe
 	bisect-ppx-report html
 
 bisect-clean:
@@ -34,5 +34,5 @@ clean:
 	dune clean
 	rm -f finalproject.zip
 
-doc:
+docs:
 	dune build @doc

@@ -19,7 +19,6 @@ module type MonopolySig = sig
   val find_color_set : place -> place list -> place list
   val check_color_set : string -> place list -> bool
   val rent_of_place : place -> place list -> int -> int
-  val tax_of_place : place -> int
   val house_num_of_place : place -> int
   val hotel_num_of_place : place -> int
   val house_cost_of_place : place -> int
@@ -47,7 +46,6 @@ module type PlayerSig = sig
   val buy_place : player -> Monopoly.place -> player
   val mortgage_place : player -> Monopoly.place -> player
   val pay_rent : player -> int -> player -> player * player
-  val pay_tax : player -> int -> player
 
   val can_add_house :
     player -> Monopoly.place -> Monopoly.place list -> bool
@@ -61,7 +59,6 @@ module type PlayerSig = sig
 
   val can_sell_hotel : player -> Monopoly.place -> bool
   val sell_hotel : player -> Monopoly.place -> player
-  val check_double : int -> int -> player -> player
 end
 
 module PlayerCheck : PlayerSig = Player

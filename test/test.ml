@@ -13,7 +13,8 @@
    backend logics, since it's the executable main file in bin folder
    that connects the bulk of our backend logics together. We believe
    ensuring the correctness of our individual functions makes writing
-   in-game logic easier.*)
+   and manually testing in-game logic easier. OUnit testing is done
+   glass-box, while manual testing is done black-box.*)
 
 open OUnit2
 open Game
